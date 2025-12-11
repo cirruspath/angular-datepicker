@@ -6,9 +6,6 @@
 
     grunt.loadNpmTasks('grunt-eslint');
     return {
-      'options': {
-        'config': '.eslintrc'
-      },
       'target': [
         'Gruntfile.js',
         '<%= confs.js %>/**/*.js'

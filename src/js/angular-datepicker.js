@@ -1067,21 +1067,56 @@
           $scope.selectedDay = null;
           $scope.selectedYear = null;
 
-          theCalendar.remove();
-          thisInput.remove();
+          // theCalendar is a native DOM element, not a jQuery object
+          if (theCalendar) {
+            if (typeof theCalendar.remove === 'function') {
+              // Modern browsers support native remove()
+              theCalendar.remove();
+            } else if (theCalendar.parentNode) {
+              // Fallback for older browsers
+              theCalendar.parentNode.removeChild(theCalendar);
+            }
+          }
+          theCalendar = null;
 
-          monthAndYearHeader.remove();
-          yearsPaginationHeader.remove();
-          daysColumns.remove();
-          days.remove();
+          // thisInput is a jQuery/angular element object
+          if (thisInput && typeof thisInput.remove === 'function') {
+            thisInput.remove();
+          }
+          thisInput = null;
+
+          // These are arrays of HTML strings, not jQuery objects, so just clear them
+          if (monthAndYearHeader && Array.isArray(monthAndYearHeader)) {
+            monthAndYearHeader.length = 0;
+          }
+          monthAndYearHeader = null;
+
+          if (yearsPaginationHeader && Array.isArray(yearsPaginationHeader)) {
+            yearsPaginationHeader.length = 0;
+          }
+          yearsPaginationHeader = null;
+
+          if (daysColumns && Array.isArray(daysColumns)) {
+            daysColumns.length = 0;
+          }
+          daysColumns = null;
+
+          if (days && Array.isArray(days)) {
+            days.length = 0;
+          }
+          days = null;
 
           prevButton = null;
           nextButton = null;
 
-          htmlTemplate.find('*').off().remove();
-          htmlTemplate.remove();
+          // htmlTemplate is a string, not a jQuery object, so just clear it
+          // The actual DOM elements are already cleaned up via theCalendar.remove()
           htmlTemplate = null;
-          element.remove();
+
+          // element is the directive's element (Angular/jQuery object)
+          if (element && typeof element.remove === 'function') {
+            element.remove();
+          }
           element = null;
         });
       };
